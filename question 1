@@ -1,0 +1,95 @@
+Microsoft Windows [Version 10.0.22631.5624]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Program Files\MySQL\MySQL Server 9.3\bin>mysql -h localhost -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 22
+Server version: 9.3.0 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use college;
+Database changed
+mysql> desc student;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| rollno  | int         | YES  |     | NULL    |       |
+| Name    | varchar(30) | YES  |     | NULL    |       |
+| Address | varchar(30) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.073 sec)
+
+mysql> desc subject;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| Sub_code | int         | YES  |     | NULL    |       |
+| Sub_name | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+2 rows in set (0.026 sec)
+
+mysql> desc marks;
++----------+------+------+-----+---------+-------+
+| Field    | Type | Null | Key | Default | Extra |
++----------+------+------+-----+---------+-------+
+| Roll_no  | int  | YES  |     | NULL    |       |
+| Sub_code | int  | YES  |     | NULL    |       |
+| Marks    | int  | YES  |     | NULL    |       |
++----------+------+------+-----+---------+-------+
+3 rows in set (0.028 sec)
+
+mysql> SELECT
+    ->     s.Name,
+    ->     AVG(m.Marks) AS Avg_Marks
+    -> FROM
+    ->     Student s
+    -> JOIN
+    ->     Marks m
+    ->     ON s.RollNo = m.Roll_no
+    -> GROUP BY
+    ->     s.Name;
+Empty set (0.019 sec)
+
+mysql> insert into student(rollno,Name,Address)
+    -> values(1,'Aditi','india'),(2,'sakshi','usa'),(3,'vedant','pimpri');
+Query OK, 3 rows affected (0.721 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> insert into subject(Sub_code,Sub_name)
+    -> values(111,'dbms'),(112,'cns'),(113,'spos'),(114,'toc');
+Query OK, 4 rows affected (0.711 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> insert into marks(Roll_no,Sub_code,Marks)
+    -> values(1,111,90),(2,112,70),(3,113,80),(2,114,60);
+Query OK, 4 rows affected (0.701 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> SELECT
+    ->     s.Name,
+    ->     AVG(m.Marks) AS Avg_Marks
+    -> FROM
+    ->     Student s
+    -> JOIN
+    ->     Marks m
+    ->     ON s.RollNo = m.Roll_no
+    -> GROUP BY
+    ->     s.Name;
++--------+-----------+
+| Name   | Avg_Marks |
++--------+-----------+
+| Aditi  |   90.0000 |
+| sakshi |   65.0000 |
+| vedant |   80.0000 |
++--------+-----------+
+3 rows in set (0.663 sec)
+
+mysql>
