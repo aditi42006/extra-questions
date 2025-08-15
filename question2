@@ -1,0 +1,261 @@
+Question:
+Write SQL statement for the following (any five)
+Consider the following database
+pilot(pid, pname)
+flight(fid, ftype, capacity)
+route(pid, fid, from_city, to_city)
+i) List the details of flights having capacity more than 300
+ii) List the flights between ‘Surat’ and ‘Mumbai’
+iii) List the names of pilots who fly from ‘Pune’
+iv) List the route on which , pilot ‘Mr Kapoor ’ flies
+v) List the pilots whose names . starts with letter ‘A %’ but does not end with letter ‘A’
+
+
+Practical implementation:
+
+Microsoft Windows [Version 10.0.22631.5624]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Program Files\MySQL\MySQL Server 9.3\bin>mysql -h localhost -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 25
+Server version: 9.3.0 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use airport;
+Database changed
+mysql> desc pilot;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| pid   | int         | YES  |     | NULL    |       |
+| pname | varchar(20) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+2 rows in set (0.039 sec)
+
+mysql> desc pilot;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| pid   | int         | YES  |     | NULL    |       |
+| pname | varchar(20) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+2 rows in set (0.026 sec)
+
+mysql> desc flight;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| fid      | int         | YES  |     | NULL    |       |
+| ftype    | varchar(20) | YES  |     | NULL    |       |
+| capacity | int         | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.026 sec)
+
+mysql> desc route;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| pid       | int         | YES  |     | NULL    |       |
+| fid       | int         | YES  |     | NULL    |       |
+| from_city | varchar(30) | YES  |     | NULL    |       |
+| to_city   | varchar(20) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+4 rows in set (0.026 sec)
+
+mysql>  insert into pilot(pid,pname)
+    -> values (1,'Gunjan Saxena'),(2,'Mohana Singh'),(3,'Rakesh Sharma');
+Query OK, 3 rows affected (0.744 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> insert into flight(fid,ftype,capacity)
+    -> values (111,'Indigo',350),(112,'Air India',400),(113,'Go first',500);
+Query OK, 3 rows affected (0.710 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> insert into route(pid,fid, from_city, to_city)
+    -> values (1,111,'Delhi','Mumbai'),(2,112,'Hyderabad','Vidyanagar'),(3,113,'Kolkata','Chennai');
+Query OK, 3 rows affected (0.700 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from flight where capacity > 300;
++------+---------------+----------+
+| fid  | ftype         | capacity |
++------+---------------+----------+
+|  101 | Air India 256 |      500 |
+|  102 | Indigo 412    |      450 |
+|  103 | Emirates 210  |      350 |
+|  111 | Indigo        |      350 |
+|  112 | Air India     |      400 |
+|  113 | Go first      |      500 |
+|  111 | Indigo        |      350 |
+|  112 | Air India     |      400 |
+|  113 | Go first      |      500 |
++------+---------------+----------+
+9 rows in set (0.670 sec)
+
+mysql> drop table flight;
+Query OK, 0 rows affected (1.044 sec)
+
+mysql> desc flight;
+ERROR 1146 (42S02): Table 'airport.flight' doesn't exist
+mysql> insert into flight(fid,ftype,capacity)
+    ->  values (111,'Indigo',350),(112,'Air India',400),(113,'Go first',500);
+ERROR 1146 (42S02): Table 'airport.flight' doesn't exist
+mysql> create table flight (fid int,ftype varchar(20),capacity int);
+Query OK, 0 rows affected (0.983 sec)
+
+mysql>  insert into flight(fid,ftype,capacity)
+    -> values (111,'Indigo',350),(112,'Air India',400),(113,'Go first',500);
+Query OK, 3 rows affected (0.076 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> desc flight;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| fid      | int         | YES  |     | NULL    |       |
+| ftype    | varchar(20) | YES  |     | NULL    |       |
+| capacity | int         | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.026 sec)
+
+mysql>  select * from flight where capacity > 300;
++------+-----------+----------+
+| fid  | ftype     | capacity |
++------+-----------+----------+
+|  111 | Indigo    |      350 |
+|  112 | Air India |      400 |
+|  113 | Go first  |      500 |
++------+-----------+----------+
+3 rows in set (0.009 sec)
+
+mysql>  select * from route;
++------+------+-----------+------------+
+| pid  | fid  | from_city | to_city    |
++------+------+-----------+------------+
+|    1 |  111 | Delhi     | Mumbai     |
+|    2 |  112 | Hyderabad | Vidyanagar |
+|    3 |  113 | Kolkata   | Chennai    |
++------+------+-----------+------------+
+3 rows in set (0.009 sec)
+
+mysql> insert into route(pid,fid, from_city, to_city)
+    -> values (4,114,'Surat','Mumbai');
+Query OK, 1 row affected (0.277 sec)
+
+mysql> select * from route where from_city='surat' and to_city='mumbai';
++------+------+-----------+---------+
+| pid  | fid  | from_city | to_city |
++------+------+-----------+---------+
+|    4 |  114 | Surat     | Mumbai  |
++------+------+-----------+---------+
+1 row in set (0.009 sec)
+
+mysql> select * from pilot;
++------+----------------+
+| pid  | pname          |
++------+----------------+
+|    1 | Roman Jha      |
+|    2 | Mohit Agarwal  |
+|    3 | Sankalp Mishra |
+|    1 | Gunjan Saxena  |
+|    2 | Mohana Singh   |
+|    3 | Rakesh Sharma  |
+|    1 | Gunjan Saxena  |
+|    2 | Mohana Singh   |
+|    3 | Rakesh Sharma  |
++------+----------------+
+9 rows in set (0.010 sec)
+
+mysql> drop table pilot;
+Query OK, 0 rows affected (0.951 sec)
+
+mysql> create table pilot(pid int,pname varchar(20))
+    -> ;
+Query OK, 0 rows affected (0.941 sec)
+
+mysql> ^C
+mysql> insert into pilot(pid,pname)
+    -> values (1,'Gunjan Saxena'),(2,'Mohana Singh'),(3,'Rakesh Sharma');
+Query OK, 3 rows affected (0.708 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> desc pilot;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| pid   | int         | YES  |     | NULL    |       |
+| pname | varchar(20) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+2 rows in set (0.679 sec)
+mysql> select * from pilot;
++------+---------------+
+| pid  | pname         |
++------+---------------+
+|    1 | Gunjan Saxena |
+|    2 | Mohana Singh  |
+|    3 | Rakesh Sharma |
++------+---------------+
+3 rows in set (0.008 sec)
+mysql>  insert into route(pid,fid, from_city, to_city)
+    -> values (3,113,'pune','mumbai');
+Query OK, 1 row affected (0.066 sec)
+
+mysql> select pname from pilot where pid in(select pid from route where from_city='pune');
++---------------+
+| pname         |
++---------------+
+| Rakesh Sharma |
++---------------+
+1 row in set (0.035 sec)
+
+mysql> insert into pilot(pid,pname) values(5,'Mr.Kapoor');
+Query OK, 1 row affected (0.679 sec)
+
+mysql> select * from pilot;
++------+---------------+
+| pid  | pname         |
++------+---------------+
+|    1 | Gunjan Saxena |
+|    2 | Mohana Singh  |
+|    3 | Rakesh Sharma |
+|    5 | Mr.Kapoor     |
++------+---------------+
+4 rows in set (0.008 sec)
+mysql>  insert into route(pid,fid,from_city,to_city)
+ values(1,111,'Delhi','Mumbai'),(2,112,'Hyderabad','Vidyanagar'),(3,113,'Kolkata','Chennai'), (4,114,'Surat','Mumbai'),(5,115,'pune','mumbai');
+Query OK, 5 rows affected (0.074 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+mysql>  select *from route;
++------+------+-----------+------------+
+| pid  | fid  | from_city | to_city    |
++------+------+-----------+------------+
+|    1 |  111 | Delhi     | Mumbai     |
+|    2 |  112 | Hyderabad | Vidyanagar |
+|    3 |  113 | Kolkata   | Chennai    |
+|    4 |  114 | Surat     | Mumbai     |
+|    5 |  115 | pune      | mumbai     |
++------+------+-----------+------------+
+5 rows in set (0.006 sec)
+mysql> insert into pilot(pid,pname)
+    -> values (6,'Aditi Dherange');
+Query OK, 1 row affected (0.061 sec)
+
+mysql> select * from pilot where pname like 'A%' and pname not like '%A';
++------+----------------+
+| pid  | pname          |
++------+----------------+
+|    6 | Aditi Dherange |
++------+----------------+
+1 row in set (0.029 sec)
+
+mysql>
