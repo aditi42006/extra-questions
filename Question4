@@ -1,0 +1,12 @@
+Question:-
+Consider the following relational schemaEmployee
+(empno,name,office,age)Books(isbn,title,authors,publisher)Loan(empno, isbn,date)
+Write the following queries in relational algebra.
+a.Find the names of employees who have borrowed a book Published byMcGraw-Hill.
+b.Find the names of employees who have borrowed all books Published byMcGraw-Hill.
+c.Find the names of employees who have borrowed more than five different books
+published by McGraw-Hill.
+d.For each publisher, find the names of employees who have borrowed more than five
+books of that publisher
+
+Execution:-
