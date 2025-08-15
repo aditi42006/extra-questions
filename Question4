@@ -10,3 +10,281 @@ d.For each publisher, find the names of employees who have borrowed more than fi
 books of that publisher
 
 Execution:-
+
+Microsoft Windows [Version 10.0.22631.5624]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Program Files\MySQL\MySQL Server 9.3\bin>mysql -h localhost -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 30
+Server version: 9.3.0 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database book;
+Query OK, 1 row affected (0.762 sec)
+
+mysql> use book;
+Database changed
+mysql> create table schemaEmployee(empno int,name varchar(30),office varchar(40),age int);
+Query OK, 0 rows affected (0.426 sec)
+
+mysql> create table Books(isbn int ,title varchar(20),authors varchar(20),publisher varchar(40));
+Query OK, 0 rows affected (0.235 sec)
+
+mysql>  INSERT INTO schemaEmployee (empno, name, office, age) VALUES
+    -> (1,'Aditi','Mumbai',20),
+    -> (2,'Vedant','Pune',25),
+    -> (3,'Sakshi','Akurdi',30),
+    -> (4,'Siddhant','Moshi',31),
+    -> (5,'Yash','Talegaon',19);
+Query OK, 5 rows affected (0.097 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Books (isbn, title, authors, publisher) VALUES
+    -> (111, 'AI Fundamentals', 'Russell', 'Pearson'),
+    -> (112,'Python Basics', 'Guido', 'McGraw-Hill'),
+    -> (113,'Networking', 'Tanenbaum', 'McGraw-Hill'),
+    -> (114,'Data Structures', 'Seymour', 'McGraw-Hill'),
+    -> (115,'Algorithms', 'Cormen', 'McGraw-Hill'),
+    -> (116,'Java Programming', 'Deitel', 'Pearson'),
+    -> (117,'Operating Systems', 'Silberschatz', 'Pearson'),
+    -> (118, 'DBMS Concepts', 'Korth', 'McGraw-Hill');
+Query OK, 8 rows affected (0.073 sec)
+Records: 8  Duplicates: 0  Warnings: 0
+
+mysql>  INSERT INTO Loan (empno, isbn, date) VALUES
+    ->  (1,111,'2025-08-01'),
+    ->  (1,112,'2025-08-04'),
+    ->  (1,114,'2025-08-05'),
+    ->  (1,116,'2025-08-09'),
+    ->  (1,117,'2025-08-08'),
+    ->  (2,111,'2025-08-07'),
+    -> (2,112,'2025-08-05'),
+    ->  (3,113,'2025-08-01'),
+    ->  (3,115,'2025-08-06'),
+    -> (4,114,'2025-08-04'),
+    ->  (4,116,'2025-08-07'),
+    -> (4,117,'2025-08-06'),
+    -> (5,111,'2025-08-07'),
+    -> (5,112,'2025-08-02'),
+    -> (5,114,'2025-08-04'),
+    -> (5,116,'2025-08-09'),
+    -> (5,117,'2025-08-07');
+Query OK, 17 rows affected (0.077 sec)
+Records: 17  Duplicates: 0  Warnings: 0
+
+mysql> select distinct e.name from schemaemployee e join loan l on e.empno=l.empno join books b on l.isbn=b.isbn where b.publisher='McGraw-Hill';
++----------+
+| name     |
++----------+
+| Aditi    |
+| Vedant   |
+| Sakshi   |
+| Siddhant |
+| Yash     |
++----------+
+5 rows in set (0.013 sec)
+mysql> select e.name from schemaemployee e where not exists (select 1 from books b where b.publisher='McGraw-Hill' and not exists (select 1 from loan l where l.empno=e.empno and l.isbn=b.isbn));
++--------+
+| name   |
++--------+
+| Aditi |
+| Yash  |
++--------+
+2 rows in set (0.016 sec)
+
+mysql>  select e.name from schemaemployee e join loan l on e.empno=l.empno join books b on l.isbn=b.isbn where b.publisher='McGraw-Hill' group by e.empno, e.name having count(distinct b.isbn)>5;
+Empty set (0.168 sec)
+
+mysql> select b.publisher, e.name from schemaemployee e join loan l on e.empno=l.empno join books b on l.isbn=b.isbn group by b.publisher, e.empno, e.name having count(l.isbn)>5;
+Empty set (0.020 sec)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
