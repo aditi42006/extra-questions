@@ -1,0 +1,161 @@
+Consider the following tables:Employee (Emp_no, Name, Emp_city)Company (Emp_no,
+Company_name, Salary)
+i.Write a SQL query to display Employeename and company name.
+ii.Write a SQL query to display employeename, employee city ,company name andsalary
+of all the employees whose salary>10000
+iii.Write a query to display all the employees working in “XYZ company
+
+ Execution:
+Microsoft Windows [Version 10.0.22631.5624]
+(c) Microsoft Corporation. Acreate table company(Emp_no int ,Company_name varchar(20), Salary int);ll rights reserved.
+
+C:\Program Files\MySQL\MySQL Server 9.3\bin>mysql -h localhost -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 28
+Server version: 9.3.0 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| airport            |
+| college            |
+| demo               |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sys                |
+| world              |
++--------------------+
+9 rows in set (0.029 sec)
+mysql> create database xyz;
+Query OK, 1 row affected (0.089 sec)
+
+mysql> use xyz;
+Database changed
+mysql> create table Employee (Emp_no int, Name varchar(20), Emp_city varchar(40));
+Query OK, 0 rows affected (0.887 sec)
+
+mysql> insert into employee values
+  ->  (1,'Aditi','Mumbai'),
+ ->  (2,'Vedant','Pune'),
+    ->  (3,'Sakshi','Nanded'),
+    -> (4,'Siddhant','Pimpri'),
+    -> (5,'Divya','Latur'),
+    ->  (6,'Yash','Kolapur');
+Query OK, 5 rows affected (0.059 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+mysql> create table company(Emp_no int ,Company_name varchar(20), Salary int);
+Query OK, 0 rows affected (0.259 sec)
+mysql>  insert into company values
+    ->  (1,'Apple',1100000),
+    ->  (2,'Microsoft',500000),
+    ->  (3,'Google',90000),
+    ->  (4,'Tesla',950000),
+    ->  (5,'Intel',970000),
+    -> (6,'Samsung',100000);
+Query OK, 6 rows affected (0.069 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+mysql> select Name,Company_name from employee,company;
++----------+--------------+
+| Name     | Company_name |
++----------+--------------+
+| Yash     | Apple        |
+| Divya    | Apple        |
+| Siddhant | Apple        |
+| Sakshi   | Apple        |
+| Vedant   | Apple        |
+| Aditi    | Apple        |
+| Yash     | Microsoft    |
+| Divya    | Microsoft    |
+| Siddhant | Microsoft    |
+| Sakshi   | Microsoft    |
+| Vedant   | Microsoft    |
+| Aditi    | Microsoft    |
+| Yash     | Google       |
+| Divya    | Google       |
+| Siddhant | Google       |
+| Sakshi   | Google       |
+| Vedant   | Google       |
+| Aditi    | Google       |
+| Yash     | Tesla        |
+| Divya    | Tesla        |
+| Siddhant | Tesla        |
+| Sakshi   | Tesla        |
+| Vedant   | Tesla        |
+| Aditi    | Tesla        |
+| Yash     | Intel        |
+| Divya    | Intel        |
+| Siddhant | Intel        |
+| Sakshi   | Intel        |
+| Vedant   | Intel        |
+| Aditi    | Intel        |
+| Yash     | Samsung      |
+| Divya    | Samsung      |
+| Siddhant | Samsung      |
+| Sakshi   | Samsung      |
+| Vedant   | Samsung      |
+| Aditi    | Samsung      |
++----------+--------------+
+36 rows in set (0.009 sec)
+
+mysql> select e.name,c.Company_name
+    -> from employee e,
+    -> company c
+    -> where e.Emp_no=c.Emp_no;
++----------+--------------+
+| name     | Company_name |
++----------+--------------+
+| Aditi    | Apple        |
+| Vedant   | Microsoft    |
+| Sakshi   | Google       |
+| Siddhant | Tesla        |
+| Divya    | Intel        |
+| Yash     | Samsung      |
++----------+--------------+
+6 rows in set (0.005 sec)
+mysql> select
+    ->   e.Name AS employeeName,
+    -> e.Emp_city AS employeecity,
+    -> c.Company_name AS companyname,
+    -> c.salary
+    ->  FROM
+    ->  employee e
+    -> JOIN
+    -> company c ON e.Emp_no = c.Emp_no
+    ->  WHERE
+    -> c.salary > 10000;
++--------------+--------------+-------------+---------+
+| employeeName | employeecity | companyname | salary  |
++--------------+--------------+-------------+---------+
+| Aditi        | Mumbai       | Apple       | 1100000 |
+| Vedant       | Pune         | Microsoft   |  500000 |
+| Sakshi       | Nanded       | Google      |   90000 |
+| Siddhant     | Pimpri       | Tesla       |  950000 |
+| Divya        | Latur        | Intel       |  970000 |
+| Yash         | Kolapur      | Samsung     |  100000 |
++--------------+--------------+-------------+---------+
+6 rows in set (0.008 sec)
+
+mysql> select Name as employeename,
+    ->  Emp_city as employeecity
+    -> from employee
+    -> where Emp_no in(select Emp_no from company where Company_name='tesla');
++--------------+--------------+
+| employeename | employeecity |
++--------------+--------------+
+| Siddhant     | Pimpri       |
++--------------+--------------+
+1 row in set (0.009 sec)
+
+mysql>
