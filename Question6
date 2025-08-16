@@ -1,0 +1,96 @@
+Question:
+Consider following database Cricket_play(p_id, Name, Address) Matches(Match_code,
+match_date, match_place) Score(p_id, match_code, score) Write following queries in SQL
+i) List player name, match_date, match_place, and score of each player
+4
+ii) List all those players, whose maximum score is higher than 50 
+
+Practical:
+
+Microsoft Windows [Version 10.0.22631.5624]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Program Files\MySQL\MySQL Server 9.3\bin>mysql -h localhost -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 34
+Server version: 9.3.0 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use demo;
+Database changed
+mysql> create table Cricket_play (
+    ->         p_id int primary key,
+    ->          Name varchar(30),
+    ->          Address varchar(50)
+    ->     );
+Query OK, 0 rows affected (0.990 sec)
+
+mysql> create table Matches (
+    ->          Match_code int primary key,
+    ->       match_date date,
+    ->        match_place varchar(50)
+    ->      );
+Query OK, 0 rows affected (0.926 sec)
+
+mysql> create table Score (
+    ->         p_id int,
+    ->        match_code int,
+    ->        score int,
+    ->          primary key(p_id, match_code),
+    ->         foreign key (p_id) references Cricket_play(p_id),
+    ->         foreign key (match_code) references Matches(Match_code)
+    ->     );
+Query OK, 0 rows affected (1.183 sec)
+
+mysql> insert into Cricket_play values
+    ->      (111, 'Aditi', 'india'),
+    ->     (112, 'Rohan', 'pimpri'),
+    ->     (113, 'sumeet', 'Pune');
+Query OK, 3 rows affected (0.748 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> insert into Matches values
+    ->      (211, '2025-08-08', 'Mumbai'),
+    ->      (212, '2025-08-06', 'Delhi'),
+    ->      (213, '2025-08-05', 'Pune');
+Query OK, 3 rows affected (0.717 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql>  insert into Score values
+    ->     (111, 211, 70),
+    ->      (111, 212, 85),
+    ->     (112, 211, 90),
+    ->      (112, 213, 65),
+    ->      (113, 212, 60),
+    ->      (113, 213, 40);
+Query OK, 6 rows affected (0.145 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> select c.Name, m.match_date, m.match_place, s.score
+    -> ^C
+mysql> select c.Name, m.match_date, m.match_place, s.score
+    ->  from Cricket_play c
+    -> join Score s on c.p_id = s.p_id
+    -> join Matches m on s.match_code = m.Match_code;
++--------+------------+-------------+-------+
+| Name   | match_date | match_place | score |
++--------+------------+-------------+-------+
+| Aditi  | 2025-08-08 | Mumbai      |    70 |
+| Aditi  | 2025-08-06 | Delhi       |    85 |
+| Rohan  | 2025-08-08 | Mumbai      |    90 |
+| Rohan  | 2025-08-05 | Pune        |    65 |
+| sumeet | 2025-08-06 | Delhi       |    60 |
+| sumeet | 2025-08-05 | Pune        |    40 |
++--------+------------+-------------+-------+
+6 rows in set (0.011 sec)
+
+mysql> ^C
+mysql>
