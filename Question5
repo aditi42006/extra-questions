@@ -1,0 +1,171 @@
+Question:
+Write the following inserts, deletes or updates in SQL, using the university schema.
+a. Increase the salary of each instructor in the Comp. Sci. department by 10 %.
+b. Delete all courses that have never been offered (that is, do not occur in the section
+relation).
+c. Insert every student whose tot cred attribute is greater than 100 as an instructor in the
+same department, with a salary of $10,000.
+
+Pratical:
+
+Microsoft Windows [Version 10.0.22631.5624]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Program Files\MySQL\MySQL Server 9.3\bin>mysql -h localhost -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 33
+Server version: 9.3.0 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database A;
+Query OK, 1 row affected (0.785 sec)
+
+mysql> use A;
+Database changed
+mysql> create table department(
+    -> dept_name varchar(20) primary key,
+    ->  building varchar(20),
+    -> budget numeric(12,2)
+    -> );
+Query OK, 0 rows affected (1.018 sec)
+
+mysql> create table instructor(
+    ->    ID int primary key,
+    ->  name varchar(30),
+    -> dept_name varchar(20),
+    ->  salary numeric(10,2),
+    -> foreign key (dept_name) references department(dept_name)
+    -> );
+Query OK, 0 rows affected (1.100 sec)
+
+mysql> create table course(course_id varchar(10) primary key,title varchar(50),dept_name varchar(20), credits int,foreign key (dept_name) references department(dept_name));
+Query OK, 0 rows affected (1.154 sec)
+
+mysql> create table section(course_id varchar(10),sec_id varchar(5),semester varchar(10),year int,primary key(course_id, sec_id, semester, year),foreign key(course_id) references course(course_id));
+Query OK, 0 rows affected (1.020 sec)
+
+mysql> create table student( ID int primary key,name varchar(30),dept_name varchar(20),tot_cred int,foreign key (dept_name) references department(dept_name));
+Query OK, 0 rows affected (1.085 sec)
+
+mysql> insert into department values
+    -> ('chemistry','chemistry building',2000000)
+    -> ('DSA','Dsa building',5000000);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '('DSA','Dsa building',5000000)' at line 3
+mysql> ^C
+mysql> ^C
+mysql>  insert into department values
+    ->  ('chemistry','chemistry building',2000000),
+    ->  ('DSA','Dsa building',5000000),
+    -> ('Physics', 'Physics Building', 800000);
+Query OK, 3 rows affected (0.752 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> insert into instructor values
+    -> (1,'Om','chemistry',650000
+    -> ),
+    -> (2,'Aditi','DSA',600000),
+    -> (3,'Sakshi','Physics',500000);
+Query OK, 3 rows affected (0.081 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> insert into course values
+    -> ('Ch111','Intro to Chemistry','Chemistry',4);
+Query OK, 1 row affected (0.720 sec)
+
+mysql> ^C
+mysql>  insert into course values
+    -> ('Ch112','Data Structure','Chemistry',5),
+    -> ('DSA113','Data Algorithm','DSA',8),
+    -> ('PHYS114','Physics I', 'Physics', 3),
+    -> ('CH115','Algorithms','Chemistry',7);
+Query OK, 4 rows affected (0.719 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> insert into section values
+    ->  ('Ch111','001','Fall',2025),
+    -> ('Ch112','001','Fall',2025),
+    -> ('DSA113','001','Fall',2025);
+Query OK, 3 rows affected (0.736 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> insert into student values
+    -> (111, 'David', 'Chemistry', 120),
+    -> (112, 'Eva', 'DSA', 90),
+    -> (113, 'Frank', 'Physics', 110);
+Query OK, 3 rows affected (0.734 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> update instructor
+    -> set salary = salary * 1.10
+    -> where dept_name = '^C
+mysql>  update instructor
+    ->  set salary = salary * 1.10
+    -> where dept_name = 'Chemistry';
+Query OK, 1 row affected (0.071 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> delete from course
+    -> where course_id not in (
+    -> select distinct course_id
+    -> from section
+    -> );
+Query OK, 2 rows affected (0.721 sec)
+
+mysql> insert into instructor(ID, name, dept_name, salary)
+    ->  select ID, name, dept_name, 10000
+    -> from student
+    -> where tot_cred > 100;
+Query OK, 2 rows affected (0.711 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql>  select * from instructor;
++-----+--------+-----------+-----------+
+| ID  | name   | dept_name | salary    |
++-----+--------+-----------+-----------+
+|   1 | Om     | chemistry | 715000.00 |
+|   2 | Aditi  | DSA       | 600000.00 |
+|   3 | Sakshi | Physics   | 500000.00 |
+| 111 | David  | Chemistry |  10000.00 |
+| 113 | Frank  | Physics   |  10000.00 |
++-----+--------+-----------+-----------+
+5 rows in set (0.009 sec)
+
+mysql> select * from course;
++-----------+--------------------+-----------+---------+
+| course_id | title              | dept_name | credits |
++-----------+--------------------+-----------+---------+
+| Ch111     | Intro to Chemistry | Chemistry |       4 |
+| Ch112     | Data Structure     | Chemistry |       5 |
+| DSA113    | Data Algorithm     | DSA       |       8 |
++-----------+--------------------+-----------+---------+
+3 rows in set (0.008 sec)
+
+mysql> select * from student;
++-----+-------+-----------+----------+
+| ID  | name  | dept_name | tot_cred |
++-----+-------+-----------+----------+
+| 111 | David | Chemistry |      120 |
+| 112 | Eva   | DSA       |       90 |
+| 113 | Frank | Physics   |      110 |
++-----+-------+-----------+----------+
+3 rows in set (0.009 sec)
+
+mysql> select * from section;
++-----------+--------+----------+------+
+| course_id | sec_id | semester | year |
++-----------+--------+----------+------+
+| Ch111     | 001    | Fall     | 2025 |
+| Ch112     | 001    | Fall     | 2025 |
+| DSA113    | 001    | Fall     | 2025 |
++-----------+--------+----------+------+
+3 rows in set (0.009 sec)
+
+mysql> 
